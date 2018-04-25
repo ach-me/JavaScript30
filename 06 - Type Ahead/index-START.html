@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <form class="search-form">
@@ -14,9 +16,20 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-</script>
-  </body>
+  <script>
+    const endpoint =
+      'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+    const cities = [];
+
+    // fetch() retorna una "promesa". Eventualmente algo se retornará
+    // En principio, fetch no sabe qué tipo de datos se están levantando (html, json, musica, etc)
+    // El blob debe ser convertivo en el tipo de dato presente en el endpoint, json en este caso
+    fetch(endpoint)
+      .then(blob => blob.json())
+      .then(data => cities.push(...data));
+  </script>
+</body>
+
 </html>

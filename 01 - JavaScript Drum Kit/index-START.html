@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -57,10 +57,45 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    function playSound(e) {
 
-</script>
+      // El parametro "e" es un objeto lleno de datos que describen un evento, por ejemplo el código de la tacla que se presiono (keyCode)
+
+      // Seleccionar el elemento "audio" que corresponde a la tecla presionada
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+
+      // Seleccionar el elemento con clase "key" que corresponde a la tecla presionada
+      const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+      if (!audio) return; // Detener la funcion si la tecla tocada no corresponde a ningun elemento "audio"
+
+      audio.currentTime = 0; // Resetear el audio cada vez que se presiona una tecla
+
+      audio.play(); // Ejecutar audio asociado a la tecla
+
+      key.classList.add('playing'); // Agregar los efectos al elemento correspondiente      
+    }
+
+    // Para quitar la clase una vez que termina el efecto de transision aplicado al elemento
+    function removeTransition(e) {
+      if (e.propertyName !== 'transform') return; // Solo interesa la propiedad "transform"
+
+      // "this" refiere al elemento que llamó a esta funcion: "key"
+      this.classList.remove('playing');
+    }
+
+    const keys = document.querySelectorAll('.key');
+
+    // keys es un array de elementos. Para detectar un evento en cada uno, hay que recorrer el array
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+    // Cuando termina la transision, ejecuta la funcion "removeTransition"
+
+    // Cuando se presione una tecla se ejecutará la función playSound
+    window.addEventListener('keydown', playSound);
+  </script>
 
 
 </body>
+
 </html>
