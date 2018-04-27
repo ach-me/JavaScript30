@@ -23,12 +23,52 @@
 
     const cities = [];
 
-    // fetch() retorna una "promesa". Eventualmente algo se retornará
+    // API: fetch() retorna una "promesa". Eventualmente algo se retornará
     // En principio, fetch no sabe qué tipo de datos se están levantando (html, json, musica, etc)
     // El blob debe ser convertivo en el tipo de dato presente en el endpoint, json en este caso
     fetch(endpoint)
       .then(blob => blob.json())
       .then(data => cities.push(...data));
+
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        // verificar que la ciudad o el estado coinciden con la palabra buscada
+        const regex = new RegExp(wordToMatch, 'gi') //g: global; i: insensitive (mayuscula o minuscula)        
+        return place.city.match(regex) || place.state.match(regex);
+      })
+    }
+
+    function numberWithComas(x) {
+      // Formatea el numero para que la separacion de miles sea con una coma
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function displayMatches() {
+      // Cada vez que se ingrese un valor buscado
+      const matchArray = findMatches(this.value, cities);
+      // Recorrer el array con las coincidencias y formar un array nuevo con map(), donde cada elemento sea una estructura html con los datos de cada ciudad
+      const html = matchArray.map(place => {
+        // Para pintar de amarillo en los resultados la palabra buscada
+        const regex = new RegExp(this.value, 'gi');
+        // Reemplazar el valor buscado con una estructura html con la clase que aplica el estilo
+        const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+        const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+        return `
+          <li>
+            <span class="name">${cityName}, ${stateName}</span>
+            <span class="population">${numberWithComas(place.population)}</span>
+          </li>
+        `;
+      }).join(''); // Unir todos los elementos para volcarlo en el DOM
+      suggestions.innerHTML = html;
+    }
+
+    const searchInput = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
+
+    searchInput.addEventListener('change', displayMatches);
+    searchInput.addEventListener('keyup', displayMatches);
   </script>
 </body>
 
