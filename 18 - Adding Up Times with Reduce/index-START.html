@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Videos</title>
 </head>
+
 <body>
   <ul class="videos">
     <li data-time="5:43">
@@ -177,11 +179,46 @@
     <li data-time="1:56">
       Video 57
     </li>
-    <li data-time="4:04">
+    <li data-time="4:06">
       Video 58
     </li>
   </ul>
-<script>
-</script>
+  <script>
+
+    const timeNodes = Array.from(document.querySelectorAll('[data-time]'));
+    // Es lo mismo que:
+    // const timeNodes = [...document.querySelectorAll('[data-time]')];
+    
+    // Guardar los tiempo de los videos en segundos
+    const seconds = timeNodes
+      // tomar los valores de los atributos data-time
+      .map(node => node.dataset.time)      
+      .map(timeCode => {
+        // guardar minutos y segundos
+        // primero partir el string en el caracter ':'
+        // segundo convertir lo caracteres en numeros
+        const [mins, secs] = timeCode.split(':').map(parseFloat);
+        // retornar los segundos totales
+        return (mins * 60) + secs;
+      })
+      // sumar los tiempos de todos los videos
+      .reduce((total, seconds) => total + seconds);
+
+      let secondsLeft = seconds;
+      // guardar la parte entera de las horas
+      const hours = Math.floor(secondsLeft / 3600);
+
+      // guardar la parte decimal de las horas para los minutos
+      secondsLeft = secondsLeft % 3600;
+      const mins = Math.floor(secondsLeft / 60);
+
+      // Guardar la parte decimal de los minutos para los segundos
+      secondsLeft = secondsLeft % 60;
+
+      console.log(`${hours} horas`);
+      console.log(`${mins} minutos`);
+      console.log(`${secondsLeft} segundos`);
+  </script>
 </body>
+
 </html>
