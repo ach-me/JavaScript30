@@ -35,6 +35,45 @@
   </div>
 
 <script>
+  const slider = document.querySelector('.items');
+
+  // Para determinar si hay click o no
+  let isDown = false;
+
+  // Cuando se realiza el click, se guarda la posicion del mouse
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+    // si el mouse se esta moviendo pero no esta clickeado, salir
+    if (!isDown) return;
+    e.preventDefault();
+    // Hay que determinar donde esta el cursor
+    const x = e.pageX - slider.offsetLeft;
+
+    // Cuanto se traslado el mouse en el eje x desde que hizo click
+    const walk = x - startX;
+
+    // Scrollear horizontalmente el div
+    slider.scrollLeft = scrollLeft - walk;
+  });
 </script>
 
   </body>
